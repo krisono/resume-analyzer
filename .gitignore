@@ -1,0 +1,15 @@
+# Root
+.DS_Store
+node_modules/
+.env
+
+# Client
+client/dist/
+client/.vite/
+
+# Server
+server/target/
+server/.idea/
+server/.classpath
+server/.project
+server/.settings/
