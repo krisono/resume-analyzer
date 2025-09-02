@@ -1,3 +1,10 @@
+"""
+Comprehensive Resume Analysis Routes
+- Enhanced analysis with semantic similarity
+- User authentication and history storage
+- Advanced ATS compatibility checks
+"""
+
 from flask import Blueprint, request, jsonify, current_app
 from typing import Dict, Any, Optional
 import logging
@@ -209,14 +216,7 @@ def _save_analysis_to_db(user_id: int, analysis_data: Dict[str, Any]) -> Optiona
         # Create analysis record
         analysis = Analysis(
             user_id=user_id,
-            resume_text=analysis_data.get('input', {}).get('resume_text', '')[:5000],  # Truncate for storage
-            job_description_text=analysis_data.get('input', {}).get('job_description_text', '')[:5000],
-            scores=analysis_data.get('scores', {}),
-            keyword_analysis=analysis_data.get('keyword_analysis', {}),
-            ats_analysis=analysis_data.get('ats_analysis', {}),
-            semantic_analysis=analysis_data.get('enhanced_features', {}).get('semantic_similarity', {}),
-            named_entities=analysis_data.get('enhanced_features', {}).get('entities', {}),
-            suggestions=analysis_data.get('suggestions', []),
+            overall_score=analysis_data.get('scores', {}).get('overall_score', 0),
             created_at=datetime.utcnow()
         )
         
@@ -264,7 +264,7 @@ def get_analysis_history():
         for analysis in analyses:
             history.append({
                 'id': analysis.id,
-                'overall_score': analysis.scores.get('overall_score', 0) if analysis.scores else 0,
+                'overall_score': analysis.overall_score,
                 'created_at': analysis.created_at.isoformat()
             })
         

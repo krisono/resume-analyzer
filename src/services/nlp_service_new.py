@@ -1,11 +1,3 @@
-"""
-Comprehensive NLP Service for Resume Analysis
-- Section extraction and parsing
-- Semantic similarity using sentence transformers
-- Named entity extraction for skills, tools, certifications
-- Advanced keyword extraction with TF-IDF
-"""
-
 import spacy
 import re
 from sentence_transformers import SentenceTransformer

@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS for enhanced UI */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+  }
+  
+  * {
+    @apply border-gray-200;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500;
+  }
+  
+  .btn-success {
+    @apply btn bg-success-600 text-white hover:bg-success-700 focus:ring-success-500;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 p-6 transition-all duration-200 hover:shadow-xl;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-white;
+  }
+  
+  .textarea-field {
+    @apply input-field resize-none;
+  }
+  
+  .score-gauge {
+    @apply relative inline-flex items-center justify-center w-24 h-24 rounded-full text-2xl font-bold;
+  }
+  
+  .score-excellent {
+    @apply score-gauge bg-success-50 text-success-600 border-4 border-success-200;
+  }
+  
+  .score-good {
+    @apply score-gauge bg-blue-50 text-blue-600 border-4 border-blue-200;
+  }
+  
+  .score-average {
+    @apply score-gauge bg-warning-50 text-warning-600 border-4 border-warning-200;
+  }
+  
+  .score-poor {
+    @apply score-gauge bg-danger-50 text-danger-600 border-4 border-danger-200;
+  }
+  
+  .chip {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .chip-primary {
+    @apply chip bg-primary-100 text-primary-800;
+  }
+  
+  .chip-success {
+    @apply chip bg-success-100 text-success-800;
+  }
+  
+  .chip-warning {
+    @apply chip bg-warning-100 text-warning-800;
+  }
+  
+  .chip-danger {
+    @apply chip bg-danger-100 text-danger-800;
+  }
+}
