@@ -1,5 +1,3 @@
-#!/bin/bash
-
 echo "🚀 Testing production build locally..."
 
 # Navigate to client directory

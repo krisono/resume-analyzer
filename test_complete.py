@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Resume Analyzer Test Script
 Test all features of the streamlined resume analyzer
