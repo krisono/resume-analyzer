@@ -46,6 +46,7 @@ server.log
 # Project specific
 simple-resume-analysis.txt
 resume-analysis.pdf
+README2.md
 
 # Client
 client/dist/
