@@ -1,6 +1,7 @@
 {
   "buildCommand": "cd client && npm install && npm run build",
   "outputDirectory": "client/dist",
+  "installCommand": null,
   "functions": {
     "api/index.py": {
       "runtime": "@vercel/python@4.1.1"
