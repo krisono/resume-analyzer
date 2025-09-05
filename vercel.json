@@ -4,12 +4,7 @@
   "installCommand": null,
   "functions": {
     "api/index.py": {
-      "runtime": "@vercel/python@4.1.1",
-      "includeFiles": [
-        "src/**",
-        "api/requirements.txt",
-        "runtime.txt"
-      ]
+      "runtime": "@vercel/python@4.1.1"
     }
   },
   "rewrites": [
