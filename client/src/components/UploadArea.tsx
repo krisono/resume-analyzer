@@ -9,7 +9,7 @@ import {
   Zap,
   Target,
 } from "lucide-react";
-import { analyzeResume } from "../lib/api.ts";
+import { analyzeResume } from "../lib/api";
 
 interface UploadAreaProps {
   onAnalyze: (data: any) => void;
