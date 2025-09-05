@@ -27,3 +27,6 @@ client/coverage/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Prevent root Python auto-detection by Vercel
+requirements.txt
