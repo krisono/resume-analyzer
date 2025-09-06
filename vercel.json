@@ -4,7 +4,7 @@
   "installCommand": null,
   "functions": {
     "api/index.py": {
-      "runtime": "python3.11"
+      "runtime": "@vercel/python"
     }
   },
   "rewrites": [
