@@ -10,11 +10,38 @@ class handler(BaseHTTPRequestHandler):
             
             try:
                 data = json.loads(post_data.decode('utf-8'))
+                resume_text = data.get('resume_text', '').lower()
+                job_description = data.get('job_description_text', '').lower()
                 
-                # Simple mock analysis with proper structure
-                overall_score = random.randint(70, 95)
-                ats_score = random.randint(80, 95)
-                keyword_score = random.randint(60, 90)
+                # Extract keywords from job description
+                job_keywords = self.extract_keywords(job_description)
+                
+                # Analyze which keywords are in the resume
+                keyword_analysis = []
+                missing_keywords = []
+                matched_count = 0
+                
+                for keyword in job_keywords:
+                    in_resume = keyword.lower() in resume_text
+                    keyword_analysis.append({
+                        "keyword": keyword,
+                        "in_resume": in_resume,
+                        "context": self.get_keyword_context(keyword)
+                    })
+                    if in_resume:
+                        matched_count += 1
+                    else:
+                        missing_keywords.append(keyword)
+                
+                # Calculate scores based on actual analysis
+                total_keywords = len(job_keywords)
+                keyword_percentage = (matched_count / total_keywords * 100) if total_keywords > 0 else 0
+                keyword_score = max(50, min(95, int(keyword_percentage)))
+                overall_score = random.randint(max(60, keyword_score - 10), min(95, keyword_score + 15))
+                ats_score = random.randint(75, 95)
+                
+                # Generate suggestions based on missing keywords
+                suggestions = self.generate_suggestions(missing_keywords, matched_count, total_keywords)
                 
                 mock_response = {
                     "scores": {
@@ -22,35 +49,24 @@ class handler(BaseHTTPRequestHandler):
                         "ats_score": ats_score,
                         "keyword_score": keyword_score,
                         "checks": {
-                            "has_contact_info": True,
+                            "has_contact_info": self.check_contact_info(resume_text),
                             "proper_formatting": True,
-                            "keyword_density": True
+                            "keyword_density": keyword_score > 60
                         }
                     },
-                    "summary": f"Your resume scored {overall_score}% overall. Strong ATS compatibility at {ats_score}% with {keyword_score}% keyword matching.",
-                    "keywords": [
-                        {"keyword": "Python", "in_resume": True, "context": "Programming"},
-                        {"keyword": "React", "in_resume": True, "context": "Frontend"},
-                        {"keyword": "Machine Learning", "in_resume": False, "context": "Skills"},
-                        {"keyword": "AWS", "in_resume": True, "context": "Cloud"},
-                        {"keyword": "Docker", "in_resume": False, "context": "DevOps"}
-                    ],
-                    "missing_keywords": ["Machine Learning", "Docker", "Kubernetes"],
+                    "summary": f"Your resume scored {overall_score}% overall. ATS compatibility at {ats_score}% with {keyword_score}% keyword matching. Found {matched_count} of {total_keywords} key requirements.",
+                    "keywords": keyword_analysis,
+                    "missing_keywords": missing_keywords,
                     "coverage": {
-                        "total_keywords": 15,
-                        "matched_keywords": 10,
-                        "percentage": 67
+                        "total_keywords": total_keywords,
+                        "matched_keywords": matched_count,
+                        "percentage": int(keyword_percentage)
                     },
-                    "suggestions": [
-                        "Add more specific technical skills mentioned in the job description",
-                        "Include quantifiable achievements with numbers and percentages", 
-                        "Optimize formatting for better ATS scanning",
-                        "Add missing keywords: Machine Learning, Docker"
-                    ],
+                    "suggestions": suggestions,
                     "contact_info": {
-                        "email_found": True,
-                        "phone_found": True,
-                        "linkedin_found": False
+                        "email_found": "@" in resume_text,
+                        "phone_found": any(char.isdigit() for char in resume_text),
+                        "linkedin_found": "linkedin" in resume_text
                     },
                     "analysis_timestamp": "2025-09-05T00:00:00Z"
                 }
@@ -195,3 +211,83 @@ startxref
 770
 %%EOF"""
         return pdf_content.encode('utf-8')
+    
+    def extract_keywords(self, job_description):
+        # Common technical skills and keywords to look for
+        common_keywords = [
+            "python", "java", "javascript", "react", "angular", "vue", "node.js", "express",
+            "docker", "kubernetes", "aws", "azure", "gcp", "git", "sql", "mongodb", "postgresql",
+            "machine learning", "ai", "data analysis", "tensorflow", "pytorch", "pandas", "numpy",
+            "html", "css", "bootstrap", "tailwind", "scss", "webpack", "typescript", "redux",
+            "agile", "scrum", "devops", "ci/cd", "jenkins", "terraform", "microservices", "api",
+            "rest", "graphql", "testing", "jest", "selenium", "unit testing", "integration testing",
+            "linux", "ubuntu", "redis", "elasticsearch", "kafka", "rabbitmq", "nginx", "apache"
+        ]
+        
+        # Find keywords that appear in the job description
+        found_keywords = []
+        for keyword in common_keywords:
+            if keyword in job_description.lower():
+                found_keywords.append(keyword.title())
+        
+        # If no common keywords found, extract some words from the job description
+        if len(found_keywords) < 3:
+            words = job_description.split()
+            # Look for capitalized technical terms or longer words
+            for word in words:
+                clean_word = word.strip('.,!?;:()[]"').title()
+                if len(clean_word) > 4 and clean_word not in found_keywords and len(found_keywords) < 10:
+                    found_keywords.append(clean_word)
+        
+        return found_keywords[:10]  # Limit to 10 keywords
+    
+    def get_keyword_context(self, keyword):
+        # Categorize keywords
+        programming_langs = ["python", "java", "javascript", "typescript", "go", "rust", "c++", "c#"]
+        frameworks = ["react", "angular", "vue", "express", "django", "flask", "spring", "laravel"]
+        cloud = ["aws", "azure", "gcp", "docker", "kubernetes", "terraform"]
+        databases = ["sql", "mongodb", "postgresql", "mysql", "redis", "elasticsearch"]
+        
+        keyword_lower = keyword.lower()
+        
+        if keyword_lower in programming_langs:
+            return "Programming Language"
+        elif keyword_lower in frameworks:
+            return "Framework"
+        elif keyword_lower in cloud:
+            return "Cloud/DevOps"
+        elif keyword_lower in databases:
+            return "Database"
+        else:
+            return "Skills"
+    
+    def check_contact_info(self, resume_text):
+        # Check for email and phone patterns
+        has_email = "@" in resume_text and "." in resume_text
+        has_phone = any(char.isdigit() for char in resume_text)
+        return has_email and has_phone
+    
+    def generate_suggestions(self, missing_keywords, matched_count, total_keywords):
+        suggestions = []
+        
+        if missing_keywords:
+            if len(missing_keywords) <= 3:
+                suggestions.append(f"Consider adding these key skills: {', '.join(missing_keywords[:3])}")
+            else:
+                suggestions.append(f"Add missing keywords: {', '.join(missing_keywords[:3])} and {len(missing_keywords)-3} others")
+        
+        match_percentage = (matched_count / total_keywords * 100) if total_keywords > 0 else 0
+        
+        if match_percentage < 50:
+            suggestions.append("Focus on highlighting relevant technical skills mentioned in the job description")
+        elif match_percentage < 75:
+            suggestions.append("Include more specific examples of your experience with the required technologies")
+        
+        # Always include these general suggestions
+        suggestions.extend([
+            "Include quantifiable achievements with numbers and percentages",
+            "Use action verbs to describe your accomplishments",
+            "Optimize formatting for better ATS scanning"
+        ])
+        
+        return suggestions[:5]  # Limit to 5 suggestions
