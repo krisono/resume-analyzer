@@ -25,7 +25,11 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {!result ? (
           <div className="max-w-4xl mx-auto">
-            <UploadArea onAnalyze={handleAnalyze} isLoading={isLoading} />
+            <UploadArea 
+              onAnalyze={handleAnalyze} 
+              onStartAnalysis={handleStartAnalysis}
+              isLoading={isLoading} 
+            />
           </div>
         ) : (
           <div className="space-y-6">
@@ -46,7 +50,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <p className="text-gray-600">
-              Built with ❤️ by{" "}
+              Built by{" "}
               <a
                 href="https://nnaemekaonochie.com"
                 target="_blank"

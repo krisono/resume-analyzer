@@ -13,11 +13,13 @@ import { analyzeResume } from "../lib/api";
 
 interface UploadAreaProps {
   onAnalyze: (data: any) => void;
+  onStartAnalysis?: () => void;
   isLoading?: boolean;
 }
 
 export const UploadArea: React.FC<UploadAreaProps> = ({
   onAnalyze,
+  onStartAnalysis,
   isLoading = false,
 }) => {
   const [resumeText, setResumeText] = useState("");
@@ -32,6 +34,7 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
     }
 
     setError("");
+    onStartAnalysis?.();
 
     try {
       const result = await analyzeResume(resumeText, jobDescription);
