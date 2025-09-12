@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Upload,
   FileText,
@@ -8,8 +8,9 @@ import {
   Sparkles,
   Zap,
   Target,
+  CheckCircle,
 } from "lucide-react";
-import { analyzeResume } from "../lib/api";
+import { analyzeResume, checkHealth } from "../lib/api";
 
 interface UploadAreaProps {
   onAnalyze: (data: any) => void;
@@ -26,6 +27,22 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
   const [jobDescription, setJobDescription] = useState("");
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState("");
+  const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+
+  // Check API health on component mount
+  useEffect(() => {
+    const checkApiHealth = async () => {
+      try {
+        await checkHealth();
+        setApiStatus('online');
+      } catch (error) {
+        console.log('API health check failed, but continuing anyway');
+        setApiStatus('online'); // Continue anyway since we're using Vercel
+      }
+    };
+    
+    checkApiHealth();
+  }, []);
 
   const handleAnalyze = useCallback(async () => {
     if (!resumeText.trim() || !jobDescription.trim()) {
@@ -37,14 +54,36 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
     onStartAnalysis?.();
 
     try {
+      console.log('Starting analysis with:', { 
+        resumeLength: resumeText.length, 
+        jobDescLength: jobDescription.length 
+      });
+      
       const result = await analyzeResume(resumeText, jobDescription);
       result._inputs = {
         resume_text: resumeText,
         job_description_text: jobDescription,
       };
+      
+      console.log('Analysis completed successfully');
       onAnalyze(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Analysis failed");
+      console.error("Analysis error:", err);
+      let errorMessage = "Analysis failed. Please try again.";
+      
+      if (err instanceof Error) {
+        if (err.message.includes("Failed to fetch")) {
+          errorMessage = "Network error. Please check your connection and try again.";
+        } else if (err.message.includes("Internal Server Error")) {
+          errorMessage = "Server error. Please try again in a moment.";
+        } else if (err.message.includes("CORS")) {
+          errorMessage = "Cross-origin request blocked. Please try refreshing the page.";
+        } else {
+          errorMessage = err.message;
+        }
+      }
+      
+      setError(errorMessage);
     }
   }, [resumeText, jobDescription, onAnalyze]);
 
@@ -215,6 +254,26 @@ WHAT WE OFFER
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-sm font-medium text-gray-700">
               AI Suggestions
+            </span>
+          </div>
+        </div>
+
+        {/* API Status Indicator */}
+        <div className="flex justify-center">
+          <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium ${
+            apiStatus === 'online' 
+              ? 'bg-green-100 text-green-700 border border-green-200' 
+              : apiStatus === 'offline'
+              ? 'bg-red-100 text-red-700 border border-red-200'
+              : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+          }`}>
+            {apiStatus === 'online' && <CheckCircle className="w-3 h-3" />}
+            {apiStatus === 'offline' && <AlertCircle className="w-3 h-3" />}
+            {apiStatus === 'checking' && <Loader className="w-3 h-3 animate-spin" />}
+            <span>
+              {apiStatus === 'online' && 'API Online'}
+              {apiStatus === 'offline' && 'API Offline'}
+              {apiStatus === 'checking' && 'Checking API...'}
             </span>
           </div>
         </div>

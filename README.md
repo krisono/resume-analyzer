@@ -255,6 +255,6 @@ cd client && npm test
 
 <div align="center">
 
-[🚀 Try it Live](resume-analyzer-git-main-nnaemekas-projects-510abf34.vercel.app) • [📧 Contact](mailto:contact@nnaemekaonochie.com)
+[🚀 Try it Live](resume-analyzer-git-main-nnaemekas-projects-510abf34.vercel.app) • [📧 Contact](mailto:kristopheronochie2@gmail.com)
 
 </div>

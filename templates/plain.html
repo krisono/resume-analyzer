@@ -1,0 +1,230 @@
+<!-- Plain ATS Resume Template -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - {{ name }}</title>
+    <style>
+        /* Plain Template - Ultra-minimal ATS-safe design */
+        @media print {
+            @page { margin: 0.75in; }
+            body { margin: 0; }
+        }
+        
+        body {
+            font-family: 'Times New Roman', serif;
+            font-size: 11pt;
+            line-height: 1.2;
+            margin: 0.75in;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20pt;
+        }
+        
+        .name {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 4pt;
+            text-transform: uppercase;
+            letter-spacing: 1pt;
+        }
+        
+        .contact {
+            font-size: 10pt;
+            margin-bottom: 2pt;
+        }
+        
+        .contact a {
+            color: #000;
+            text-decoration: none;
+        }
+        
+        /* Sections */
+        .section {
+            margin-bottom: 12pt;
+        }
+        
+        .section-title {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            margin-bottom: 6pt;
+            padding-bottom: 1pt;
+        }
+        
+        /* Experience/Jobs */
+        .job {
+            margin-bottom: 8pt;
+        }
+        
+        .job-header {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+        
+        .job-details {
+            font-style: italic;
+            margin-bottom: 2pt;
+            font-size: 10pt;
+        }
+        
+        /* Lists */
+        ul {
+            margin: 2pt 0;
+            padding-left: 20pt;
+        }
+        
+        li {
+            margin-bottom: 1pt;
+        }
+        
+        /* Paragraphs */
+        p {
+            margin: 0 0 4pt 0;
+        }
+        
+        /* Skills */
+        .skills-list {
+            line-height: 1.3;
+        }
+        
+        /* Education */
+        .education-item {
+            margin-bottom: 4pt;
+        }
+        
+        .education-item strong {
+            font-weight: bold;
+        }
+        
+        /* Projects */
+        .project {
+            margin-bottom: 6pt;
+        }
+        
+        .project-header {
+            font-weight: bold;
+        }
+        
+        .project-tech {
+            font-style: italic;
+            font-size: 10pt;
+        }
+        
+        /* Certifications */
+        .certs-list {
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="name">{{ contact.name }}</div>
+        <div class="contact">
+            {{ contact.email }}
+            {%- if contact.phone %} • {{ contact.phone }}{% endif %}
+            {%- if contact.location %} • {{ contact.location }}{% endif %}
+        </div>
+        {%- if links %}
+        <div class="contact">
+            {%- for platform, url in links.items() if url %}
+                {%- if not loop.first %} • {% endif %}{{ url }}
+            {%- endfor %}
+        </div>
+        {%- endif %}
+    </div>
+
+    <!-- Summary Section -->
+    {%- if summary %}
+    <div class="section">
+        <div class="section-title">Summary</div>
+        <p>{{ summary }}</p>
+    </div>
+    {%- endif %}
+
+    <!-- Technical Skills Section -->
+    {%- if skills %}
+    <div class="section">
+        <div class="section-title">Technical Skills</div>
+        <p class="skills-list">{{ skills | join(', ') }}</p>
+    </div>
+    {%- endif %}
+
+    <!-- Experience Section -->
+    {%- if experience %}
+    <div class="section">
+        <div class="section-title">Experience</div>
+        {%- for exp in experience %}
+        <div class="job">
+            <div class="job-header">{{ exp.role }}</div>
+            <div class="job-details">
+                {{ exp.company }}
+                {%- if exp.start %} • {{ exp.start }}{% endif %}
+                {%- if exp.end %} - {{ exp.end }}{% endif %}
+            </div>
+            {%- if exp.bullets %}
+            <ul>
+                {%- for bullet in exp.bullets %}
+                <li>{{ bullet }}</li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Projects Section -->
+    {%- if projects %}
+    <div class="section">
+        <div class="section-title">Projects</div>
+        {%- for project in projects %}
+        <div class="project">
+            <div class="project-header">{{ project.name }}</div>
+            {%- if project.tech %}
+            <div class="project-tech">{{ project.tech | join(', ') }}</div>
+            {%- endif %}
+            {%- if project.bullets %}
+            <ul>
+                {%- for bullet in project.bullets %}
+                <li>{{ bullet }}</li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Education Section -->
+    {%- if education %}
+    <div class="section">
+        <div class="section-title">Education</div>
+        {%- for edu in education %}
+        <div class="education-item">
+            <strong>{{ edu.school }}</strong>
+            {%- if edu.degree %} • {{ edu.degree }}{% endif %}
+            {%- if edu.grad %} • {{ edu.grad }}{% endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Certifications Section -->
+    {%- if certifications %}
+    <div class="section">
+        <div class="section-title">Certifications</div>
+        <p class="certs-list">{{ certifications | join(', ') }}</p>
+    </div>
+    {%- endif %}
+</body>
+</html>

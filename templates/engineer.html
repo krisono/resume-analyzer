@@ -1,0 +1,349 @@
+<!-- Engineer ATS Resume Template -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - {{ name }}</title>
+    <style>
+        /* Engineer Template - Technical skills-first design */
+        @media print {
+            @page { margin: 0.6in; }
+            body { margin: 0; }
+        }
+        
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 10.5pt;
+            line-height: 1.15;
+            margin: 0.6in;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+        }
+        
+        /* Header */
+        .header {
+            text-align: left;
+            margin-bottom: 15pt;
+            border: 2px solid #000;
+            padding: 8pt;
+        }
+        
+        .name {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-bottom: 4pt;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .title {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-bottom: 4pt;
+            text-transform: uppercase;
+            letter-spacing: 1pt;
+        }
+        
+        .contact {
+            font-size: 9pt;
+            margin-bottom: 1pt;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .contact a {
+            color: #000;
+            text-decoration: none;
+        }
+        
+        /* Sections */
+        .section {
+            margin-bottom: 10pt;
+        }
+        
+        .section-title {
+            font-size: 11pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 1px solid #000;
+            background: #000;
+            color: #fff;
+            padding: 3pt 6pt;
+            margin-bottom: 6pt;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        /* Skills Grid */
+        .skills-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10pt;
+            margin-bottom: 8pt;
+        }
+        
+        .skill-category {
+            border: 1px solid #333;
+            padding: 6pt;
+        }
+        
+        .category-title {
+            font-weight: bold;
+            font-size: 10pt;
+            margin-bottom: 3pt;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+            padding-bottom: 1pt;
+        }
+        
+        .category-skills {
+            font-size: 9pt;
+            line-height: 1.2;
+        }
+        
+        /* Experience */
+        .job {
+            margin-bottom: 8pt;
+            border-left: 3px solid #333;
+            padding-left: 10pt;
+        }
+        
+        .job-header {
+            font-weight: bold;
+            font-size: 10.5pt;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .job-details {
+            font-style: italic;
+            margin-bottom: 2pt;
+            font-size: 9.5pt;
+            color: #333;
+        }
+        
+        .job-tech {
+            font-size: 9pt;
+            color: #666;
+            margin-bottom: 2pt;
+            font-weight: bold;
+        }
+        
+        .job-tech::before {
+            content: "Tech Stack: ";
+        }
+        
+        /* Lists */
+        ul {
+            margin: 2pt 0;
+            padding-left: 15pt;
+        }
+        
+        li {
+            margin-bottom: 1pt;
+            font-size: 9.5pt;
+        }
+        
+        /* Code/technical highlighting */
+        .tech-term {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #f0f0f0;
+            padding: 1pt 2pt;
+            font-size: 9pt;
+        }
+        
+        /* Projects with tech emphasis */
+        .project {
+            margin-bottom: 6pt;
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 6pt;
+        }
+        
+        .project-header {
+            font-weight: bold;
+            font-size: 10pt;
+        }
+        
+        .project-tech {
+            font-size: 9pt;
+            margin-bottom: 2pt;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .project-tech::before {
+            content: "// ";
+            color: #666;
+        }
+        
+        /* Education compact */
+        .education-tech {
+            font-size: 9.5pt;
+        }
+        
+        .education-tech strong {
+            font-weight: bold;
+        }
+        
+        /* Certifications with badges */
+        .cert-badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 2pt 4pt;
+            margin: 1pt;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+        
+        /* Metrics emphasis */
+        .metric {
+            font-weight: bold;
+            color: #000;
+            background: #ffff99;
+            padding: 1pt;
+        }
+        
+        /* GitHub/links styling */
+        .code-link {
+            font-family: 'Consolas', monospace;
+            background: #000;
+            color: #fff;
+            padding: 1pt 3pt;
+            font-size: 8pt;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="name">{{ contact.name }}</div>
+        <div class="title">Software Engineer</div>
+        <div class="contact">
+            📧 {{ contact.email }}
+            {%- if contact.phone %} | 📱 {{ contact.phone }}{% endif %}
+            {%- if contact.location %} | 📍 {{ contact.location }}{% endif %}
+        </div>
+        {%- if links %}
+        <div class="contact">
+            {%- for platform, url in links.items() if url %}
+                {%- if platform == 'github' %}
+                <span class="code-link">🔗 {{ url }}</span>
+                {%- elif platform == 'linkedin' %}
+                <span class="code-link">💼 {{ url }}</span>
+                {%- else %}
+                <span class="code-link">🌐 {{ url }}</span>
+                {%- endif %}
+                {%- if not loop.last %} {% endif %}
+            {%- endfor %}
+        </div>
+        {%- endif %}
+    </div>
+
+    <!-- Technical Skills Section (First and Prominent) -->
+    {%- if skills %}
+    <div class="section">
+        <div class="section-title">// Technical Stack</div>
+        <div class="skills-categories">
+            <div class="skill-category">
+                <div class="category-title">Primary Technologies</div>
+                <div class="category-skills">
+                    {%- for skill in skills[:8] %}
+                    <span class="tech-term">{{ skill }}</span>{% if not loop.last %}, {% endif %}
+                    {%- endfor %}
+                </div>
+            </div>
+            <div class="skill-category">
+                <div class="category-title">Additional Skills</div>
+                <div class="category-skills">
+                    {%- for skill in skills[8:] %}
+                    <span class="tech-term">{{ skill }}</span>{% if not loop.last %}, {% endif %}
+                    {%- endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {%- endif %}
+
+    <!-- Summary Section -->
+    {%- if summary %}
+    <div class="section">
+        <div class="section-title">// Executive Summary</div>
+        <p>{{ summary }}</p>
+    </div>
+    {%- endif %}
+
+    <!-- Experience Section -->
+    {%- if experience %}
+    <div class="section">
+        <div class="section-title">// Professional Experience</div>
+        {%- for exp in experience %}
+        <div class="job">
+            <div class="job-header">{{ exp.role }}</div>
+            <div class="job-details">
+                {{ exp.company }}
+                {%- if exp.start %} • {{ exp.start }}{% endif %}
+                {%- if exp.end %} → {{ exp.end }}{% endif %}
+            </div>
+            {%- if exp.tech %}
+            <div class="job-tech">{{ exp.tech | join(', ') }}</div>
+            {%- endif %}
+            {%- if exp.bullets %}
+            <ul>
+                {%- for bullet in exp.bullets %}
+                <li>{{ bullet | replace('%', '<span class="metric">%</span>') | replace('ms', '<span class="metric">ms</span>') | safe }}</li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Projects Section -->
+    {%- if projects %}
+    <div class="section">
+        <div class="section-title">// Key Projects</div>
+        {%- for project in projects %}
+        <div class="project">
+            <div class="project-header">{{ project.name }}</div>
+            {%- if project.tech %}
+            <div class="project-tech">{{ project.tech | join(' + ') }}</div>
+            {%- endif %}
+            {%- if project.bullets %}
+            <ul>
+                {%- for bullet in project.bullets %}
+                <li>{{ bullet }}</li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Education Section -->
+    {%- if education %}
+    <div class="section">
+        <div class="section-title">// Education</div>
+        {%- for edu in education %}
+        <div class="education-tech">
+            <strong>{{ edu.school }}</strong>
+            {%- if edu.degree %} | {{ edu.degree }}{% endif %}
+            {%- if edu.grad %} | Class of {{ edu.grad }}{% endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Certifications Section -->
+    {%- if certifications %}
+    <div class="section">
+        <div class="section-title">// Certifications & Credentials</div>
+        <div>
+            {%- for cert in certifications %}
+            <span class="cert-badge">{{ cert }}</span>
+            {%- endfor %}
+        </div>
+    </div>
+    {%- endif %}
+</body>
+</html>

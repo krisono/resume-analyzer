@@ -48,6 +48,9 @@ simple-resume-analysis.txt
 resume-analysis.pdf
 README2.md
 
+*.md
+!README.md
+
 # Client
 client/dist/
 client/.vite/

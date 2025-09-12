@@ -1,0 +1,299 @@
+<!-- Compact ATS Resume Template -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - {{ name }}</title>
+    <style>
+        /* Compact Template - Space-optimized ATS design */
+        @media print {
+            @page { margin: 0.5in; }
+            body { margin: 0; }
+        }
+        
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.1;
+            margin: 0.5in;
+            color: #000;
+            background: #fff;
+            max-width: 8.5in;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 15pt;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8pt;
+        }
+        
+        .name {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-bottom: 3pt;
+            text-transform: uppercase;
+        }
+        
+        .contact {
+            font-size: 9pt;
+            margin-bottom: 1pt;
+        }
+        
+        .contact a {
+            color: #000;
+            text-decoration: none;
+        }
+        
+        /* Sections */
+        .section {
+            margin-bottom: 8pt;
+        }
+        
+        .section-title {
+            font-size: 11pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: #f0f0f0;
+            padding: 2pt 4pt;
+            margin-bottom: 4pt;
+            border-left: 3px solid #000;
+        }
+        
+        /* Two-column layout for skills */
+        .two-column {
+            display: flex;
+            gap: 20pt;
+        }
+        
+        .column {
+            flex: 1;
+        }
+        
+        /* Experience/Jobs */
+        .job {
+            margin-bottom: 6pt;
+            border-left: 1px solid #ccc;
+            padding-left: 8pt;
+        }
+        
+        .job-header {
+            font-weight: bold;
+            font-size: 10pt;
+        }
+        
+        .job-details {
+            font-style: italic;
+            margin-bottom: 1pt;
+            font-size: 9pt;
+            color: #666;
+        }
+        
+        /* Compact Lists */
+        ul {
+            margin: 1pt 0;
+            padding-left: 15pt;
+        }
+        
+        li {
+            margin-bottom: 0.5pt;
+            font-size: 9.5pt;
+        }
+        
+        /* Paragraphs */
+        p {
+            margin: 0 0 2pt 0;
+        }
+        
+        /* Skills grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8pt;
+            margin-bottom: 4pt;
+        }
+        
+        .skill-category {
+            border: 1px solid #ddd;
+            padding: 4pt;
+            font-size: 9pt;
+        }
+        
+        .skill-category-title {
+            font-weight: bold;
+            margin-bottom: 2pt;
+            font-size: 9.5pt;
+        }
+        
+        /* Education inline */
+        .education-inline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2pt;
+            font-size: 9.5pt;
+        }
+        
+        .education-inline strong {
+            font-weight: bold;
+        }
+        
+        .education-inline .grad-year {
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Projects compact */
+        .project {
+            margin-bottom: 4pt;
+        }
+        
+        .project-header {
+            font-weight: bold;
+            display: inline;
+        }
+        
+        .project-tech {
+            font-style: italic;
+            font-size: 9pt;
+            color: #666;
+            display: inline;
+        }
+        
+        .project-tech::before {
+            content: " | ";
+        }
+        
+        /* Certifications inline */
+        .certs-inline {
+            font-size: 9.5pt;
+            line-height: 1.2;
+        }
+        
+        /* Metrics highlighting */
+        .metric {
+            font-weight: bold;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="name">{{ contact.name }}</div>
+        <div class="contact">
+            {{ contact.email }}
+            {%- if contact.phone %} • {{ contact.phone }}{% endif %}
+            {%- if contact.location %} • {{ contact.location }}{% endif %}
+        </div>
+        {%- if links %}
+        <div class="contact">
+            {%- for platform, url in links.items() if url %}
+                {%- if not loop.first %} • {% endif %}{{ url }}
+            {%- endfor %}
+        </div>
+        {%- endif %}
+    </div>
+
+    <!-- Summary Section -->
+    {%- if summary %}
+    <div class="section">
+        <div class="section-title">Professional Summary</div>
+        <p>{{ summary }}</p>
+    </div>
+    {%- endif %}
+
+    <!-- Technical Skills Section -->
+    {%- if skills %}
+    <div class="section">
+        <div class="section-title">Core Competencies</div>
+        <p>{{ skills | join(' • ') }}</p>
+    </div>
+    {%- endif %}
+
+    <!-- Experience Section -->
+    {%- if experience %}
+    <div class="section">
+        <div class="section-title">Professional Experience</div>
+        {%- for exp in experience %}
+        <div class="job">
+            <div class="job-header">{{ exp.role }}</div>
+            <div class="job-details">
+                {{ exp.company }}
+                {%- if exp.start %} | {{ exp.start }}{% endif %}
+                {%- if exp.end %} - {{ exp.end }}{% endif %}
+            </div>
+            {%- if exp.bullets %}
+            <ul>
+                {%- for bullet in exp.bullets %}
+                <li>{{ bullet | replace('%', '<span class="metric">%</span>') | replace('$', '<span class="metric">$</span>') | safe }}</li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Projects Section -->
+    {%- if projects %}
+    <div class="section">
+        <div class="section-title">Key Projects</div>
+        {%- for project in projects %}
+        <div class="project">
+            <span class="project-header">{{ project.name }}</span>
+            {%- if project.tech %}
+            <span class="project-tech">{{ project.tech | join(', ') }}</span>
+            {%- endif %}
+            {%- if project.bullets %}
+            <ul>
+                {%- for bullet in project.bullets %}
+                <li>{{ bullet }}</li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <!-- Education and Certifications Side by Side -->
+    <div class="two-column">
+        <!-- Education Section -->
+        {%- if education %}
+        <div class="column">
+            <div class="section">
+                <div class="section-title">Education</div>
+                {%- for edu in education %}
+                <div class="education-inline">
+                    <div>
+                        <strong>{{ edu.school }}</strong>
+                        {%- if edu.degree %}<br>{{ edu.degree }}{% endif %}
+                    </div>
+                    {%- if edu.grad %}
+                    <div class="grad-year">{{ edu.grad }}</div>
+                    {%- endif %}
+                </div>
+                {%- endfor %}
+            </div>
+        </div>
+        {%- endif %}
+
+        <!-- Certifications Section -->
+        {%- if certifications %}
+        <div class="column">
+            <div class="section">
+                <div class="section-title">Certifications</div>
+                <div class="certs-inline">
+                    {%- for cert in certifications %}
+                    • {{ cert }}<br>
+                    {%- endfor %}
+                </div>
+            </div>
+        </div>
+        {%- endif %}
+    </div>
+</body>
+</html>

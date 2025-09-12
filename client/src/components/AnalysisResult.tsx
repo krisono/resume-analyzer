@@ -9,6 +9,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { ScoreGauge } from "./ScoreGauge";
+import { ResumeGenerator } from "./ResumeGenerator";
 
 interface AnalysisResultProps {
   result: any;
@@ -17,7 +18,7 @@ interface AnalysisResultProps {
 export const AnalysisResult: React.FC<AnalysisResultProps> = ({ result }) => {
   const handleDownloadPDF = async () => {
     try {
-      const response = await fetch("/api/report/pdf", {
+      const response = await fetch("https://resume-analyzer-ruddy-theta.vercel.app/api/report/pdf", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -247,6 +248,9 @@ export const AnalysisResult: React.FC<AnalysisResultProps> = ({ result }) => {
           </div>
         </div>
       )}
+
+      {/* Resume Generator Section */}
+      <ResumeGenerator analysisResult={result} />
     </div>
   );
 };
